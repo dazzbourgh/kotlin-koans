@@ -14,10 +14,7 @@ data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int) : Comparab
     }
 }
 
-operator fun MyDate.rangeTo(other: MyDate): DateRange = {
-    val self: DateRange = DateRange(this, other)
-    return self
-}
+operator fun MyDate.rangeTo(other: MyDate): DateRange = DateRange(this, other)
 
 enum class TimeInterval {
     DAY,
@@ -27,6 +24,6 @@ enum class TimeInterval {
 
 class DateRange(override val start: MyDate, override val endInclusive: MyDate): ClosedRange<MyDate> {
     override fun contains(value: MyDate): Boolean {
-        return value in start..endInclusive
+        return value >= start && value <= endInclusive
     }
 }
