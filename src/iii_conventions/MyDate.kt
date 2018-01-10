@@ -12,6 +12,10 @@ data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int) : Comparab
             else -> 0
         }
     }
+
+    operator fun inc() = nextDay()
+    operator fun plus(other: TimeInterval) = addTimeIntervals(other, 1)
+    operator fun plus(pair: Pair<TimeInterval, Int>): MyDate = addTimeIntervals(pair.first, pair.second)
 }
 
 operator fun MyDate.rangeTo(other: MyDate): DateRange = DateRange(this, other)
@@ -19,11 +23,28 @@ operator fun MyDate.rangeTo(other: MyDate): DateRange = DateRange(this, other)
 enum class TimeInterval {
     DAY,
     WEEK,
-    YEAR
+    YEAR;
+
+    operator fun times(i: Int): Pair<TimeInterval, Int> = Pair(this, i)
 }
 
-class DateRange(override val start: MyDate, override val endInclusive: MyDate): ClosedRange<MyDate> {
-    override fun contains(value: MyDate): Boolean {
-        return value >= start && value <= endInclusive
+class DateRange(override val start: MyDate, override val endInclusive: MyDate) : ClosedRange<MyDate>, Iterable<MyDate> {
+    override fun contains(value: MyDate) = value >= start && value <= endInclusive
+
+    override fun iterator(): Iterator<MyDate> {
+        return object : Iterator<MyDate> {
+            var value = start
+
+            override fun hasNext(): Boolean {
+                return value <= endInclusive
+            }
+
+            override fun next(): MyDate {
+                val ret = value
+                value = value.nextDay()
+                return ret
+            }
+        }
     }
 }
+
