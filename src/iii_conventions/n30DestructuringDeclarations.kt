@@ -11,7 +11,7 @@ fun todoTask30(): Nothing = TODO(
     documentation = doc30()
 )
 
-class MyDate(val year: Int, val month: Int, val dayOfMonth: Int)
+data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int)
 
 fun isLeapDay(date: MyDate): Boolean {
     val (year, month, dayOfMonth) = date
